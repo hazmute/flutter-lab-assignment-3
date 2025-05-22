@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../data/models/album.dart';
+import '../../data/models/album_model.dart';
 
 class AlbumItem extends StatelessWidget {
   final Album album;

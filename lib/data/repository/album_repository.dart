@@ -1,31 +1,26 @@
+
+// lib/data/repository/album_repository.dart
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/album.dart';
-import '../models/photo.dart';
+import '../models/album_model.dart';
+import '../models/photo_model.dart';
 
 class AlbumRepository {
-  final _albumsUrl = 'https://jsonplaceholder.typicode.com/albums';
-  final _photosUrl = 'https://jsonplaceholder.typicode.com/photos';
-
   Future<List<Album>> fetchAlbums() async {
-    final res = await http.get(Uri.parse(_albumsUrl));
-    if (res.statusCode == 200) {
-      return (json.decode(res.body) as List)
-          .map((e) => Album.fromJson(e))
-          .toList();
+    final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/albums'));
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      return data.map((json) => Album.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load albums');
     }
   }
 
-  Future<Photo?> fetchFirstPhoto(int albumId) async {
-    final res = await http.get(Uri.parse(_photosUrl));
-    if (res.statusCode == 200) {
-      final photos = (json.decode(res.body) as List)
-          .map((e) => Photo.fromJson(e))
-          .where((photo) => photo.albumId == albumId)
-          .toList();
-      return photos.isNotEmpty ? photos.first : null;
+  Future<List<Photo>> fetchPhotos() async {
+    final response = await http.get(Uri.parse('https://jsonplaceholder.typicode.com/photos'));
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      return data.map((json) => Photo.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load photos');
     }

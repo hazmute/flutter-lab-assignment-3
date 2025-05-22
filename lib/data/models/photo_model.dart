@@ -7,9 +7,9 @@ class Photo {
 
   Photo({
     required this.albumId,
+    required this.url,
     required this.id,
     required this.title,
-    required this.url,
     required this.thumbnailUrl,
   });
 
@@ -18,8 +18,8 @@ class Photo {
       albumId: json['albumId'],
       id: json['id'],
       title: json['title'],
-      url: 'https://placehold.co/600x400', // Overriding as per instruction
-      thumbnailUrl: 'https://placehold.co/600x400',
+      url: json["url"],
+      thumbnailUrl: json["thumbnailUrl"],
     );
   }
 }
