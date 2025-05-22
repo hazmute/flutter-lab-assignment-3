@@ -1,4 +1,3 @@
-// lib/presentation/screens/album_detail_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../logic/album_bloc.dart';
@@ -9,57 +8,27 @@ class AlbumDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Album $albumId')),
-      body: BlocBuilder<AlbumBloc, AlbumState>(
-        builder: (context, state) {
-          if (state is AlbumLoaded) {
-            final album = state.albums.firstWhere((a) => a.id == albumId);
-            final photos =
-                state.photos.where((p) => p.albumId == albumId).toList();
-
-            return ListView(
-              padding: const EdgeInsets.all(16),
-              children: [
-                Text(
-                  album.title,
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  // style: Theme.of(context).textTheme.headlineMedium,
-                ),
-                const SizedBox(height: 16),
-                ...photos.map(
-                  (photo) => Row(
-                    children: [
-                      Column(
-                        children: [
-                          Image.network(
-                            'https://placehold.co/600x400',
-
-                            width: 180,
-                            height: 180,
-                          ),
-                          Text(photo.id.toString()),
-                        ],
-                      ),
-                      Column(
-                        children: [
-                          Image.asset(
-                            'assets/images/thumbnail.png',
-                            width: 180,
-                            height: 180,
-                          ),
-                          Text(photo.id.toString()),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          }
-          return const Center(child: CircularProgressIndicator());
-        },
-      ),
-    );
+    final bloc = context.read<AlbumBloc>();
+    final state = bloc.state;
+    if (state is AlbumLoaded) {
+      final album = state.albums.firstWhere((a) => a.id == albumId);
+      final photo = state.photos[album.id];
+      return Scaffold(
+        appBar: AppBar(title: Text('Album Detail')),
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Image.network(photo?.url ?? 'https://placehold.co/600x400'),
+              const SizedBox(height: 16),
+              Text('Album ID: ${album.id}'),
+              Text('User ID: ${album.userId}'),
+              Text('Title: ${album.title}'),
+            ],
+          ),
+        ),
+      );
+    }
+    return const Scaffold(body: Center(child: CircularProgressIndicator()));
   }
 }
